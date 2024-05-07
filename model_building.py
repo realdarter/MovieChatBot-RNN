@@ -18,6 +18,10 @@ class Encoder(tf.keras.Model):
 
     def initialize_hidden_state(self):
         return tf.zeros((self.batch_size, self.encoder_units))
+    
+    @classmethod
+    def from_config(cls, config):
+        return cls(config['vocab_size'], config['embedding_dim'], config['encoder_units'], config['batch_size'])
 
 class Decoder(tf.keras.Model):
     def __init__(self, vocab_size, embedding_dim, decoder_units, batch_size):
@@ -37,3 +41,13 @@ class Decoder(tf.keras.Model):
         output = tf.reshape(output, (-1, output.shape[2]))
         x = tf.nn.softmax(self.fc(output))
         return x, hidden
+    
+    @classmethod
+    def from_config(cls, config):
+        return cls(config['vocab_size'], config['embedding_dim'], config['decoder_units'], config['batch_size'])
+
+def build_encoder(vocab_size, embedding_dim, units, batch_size):
+    return Encoder(vocab_size, embedding_dim, units, batch_size)
+
+def build_decoder(vocab_size, embedding_dim, units, batch_size):
+    return Decoder(vocab_size, embedding_dim, units, batch_size)
