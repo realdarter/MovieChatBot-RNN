@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Bot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="container" style="padding-top: 100px;">
+        <h1>Chat Bot</h1>
+        <form id="message-form" action="/generate_response" method="POST">
+            <label for="user-input">Enter your message:</label><br>
+            <input type="text" id="user-input" name="user_input"><br>
+            <button type="submit">Submit</button>
+        </form>
+        <div id="response"></div>
+    </div>
+
+    <div class="additional-info" style="padding-top: 20px;">
+        <h2>How to Use</h2>
+        <p>To use this chat bot, simply enter your message in the input field above and click "Submit". The bot's response will be displayed below.</p>
+    </div>
+
+    <script>
+        document.getElementById('message-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            var formData = new FormData(this);
+            fetch('/generate_response', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('response').innerText = data;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>
