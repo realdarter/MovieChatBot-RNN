@@ -1,61 +1,42 @@
-import tensorflow as tf
-import numpy as np
+from train_functions import *
 from tensorflow.keras.models import load_model
-from data_preprocessing import *
-import re
 
-# Define your data preprocessing functions, such as clean_text, add_start_end, and tokenize
+# Load the saved models
+encoder = load_model('/content/models/encoder')
+decoder = load_model('/content/models/decoder')
 
-# Define your chatbot function
-def chatbot(sentence):
-    # Load the tokenizer and model
-    question_tokenizer = tf.keras.preprocessing.text.Tokenizer()
-    answer_tokenizer = tf.keras.preprocessing.text.Tokenizer()
-    question_tokenizer.fit_on_texts([''])
-    answer_tokenizer.fit_on_texts([''])
-
-    encoder = load_model('encoder_model.h5')
-    decoder = load_model('decoder_model.h5')
-
-    # Preprocess the input sentence
-    sentence = clean_text(sentence)
-    sentence = add_start_end(sentence)
-    inputs = question_tokenizer.texts_to_sequences([sentence])
+def generate_response(sentence):
+    cleaned_sentence = clean_text(sentence)
+    preprocessed_sentence = add_start_end(cleaned_sentence)
+    inputs = question_tokenizer.texts_to_sequences([preprocessed_sentence])
     inputs = tf.keras.preprocessing.sequence.pad_sequences(inputs, maxlen=29, padding='post')
 
-    # Initialize hidden state for encoder
-    hidden = [tf.zeros((1, 1024))]
-
-    # Get encoder output and hidden state
-    enc_out, enc_hidden = encoder(inputs, hidden)
-    dec_hidden = enc_hidden
-    dec_input = tf.expand_dims([answer_tokenizer.word_index['<start>']], 0)
+    initial_hidden_state = [tf.zeros((1, units))]
+    encoder_output, encoder_hidden_state = encoder(inputs, initial_hidden_state)
+    decoder_hidden_state = encoder_hidden_state
+    decoder_input = tf.expand_dims([answer_tokenizer.word_index['<start>']], 0)
     result = ''
 
-    # Generate the response
-    for t in range(32):
-        predictions, dec_hidden = decoder(dec_input, dec_hidden)
+    for _ in range(32):
+        predictions, decoder_hidden_state = decoder(decoder_input, decoder_hidden_state)
         predicted_id = tf.argmax(predictions[0]).numpy()
         result += answer_tokenizer.index_word[predicted_id] + ' '
         if answer_tokenizer.index_word[predicted_id] == '<end>':
             result = result.replace('<start> ', '')
             result = result.replace(' <end> ', '')
-            sentence = sentence.replace('<start> ', '')
-            sentence = sentence.replace(' <end>', '')
-            return sentence, result
+            cleaned_sentence = cleaned_sentence.replace('<start> ', '')
+            cleaned_sentence = cleaned_sentence.replace(' <end>', '')
+            return cleaned_sentence, result
 
-        dec_input = tf.expand_dims([predicted_id], 0)
+        decoder_input = tf.expand_dims([predicted_id], 0)
 
     result = result.replace('<start> ', '')
     result = result.replace('<end>', '')
-    sentence = sentence.replace('<start> ', '')
-    sentence = sentence.replace('<end>', '')
+    cleaned_sentence = cleaned_sentence.replace('<start> ', '')
+    cleaned_sentence = cleaned_sentence.replace('<end>', '')
 
-    return sentence, result
+    return cleaned_sentence, result
 
-# Test the chatbot function
-print(chatbot("how are you today"))
-print(chatbot('what is the weather outside'))
-print(chatbot(' what is the weather outside'))
-print(chatbot(' how old '))
-print(chatbot('can you play'))
+
+
+print(generate_response("how are you today"))
