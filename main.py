@@ -8,7 +8,7 @@ print(tf.__version__)
 
 
 data_df = pd.read_csv("data/dialogs_expanded.csv", index_col=False)
-data_df = data_df.sample(frac=0.001)
+data_df = data_df.sample(frac=0.021)
 print("Number of elements in features:", data_df.count())
 data_df
 

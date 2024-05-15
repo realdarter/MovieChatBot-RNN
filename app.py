@@ -10,7 +10,7 @@ def home():
 @app.route('/generate_response', methods=['POST'])
 def generate_a_response():
     user_input = request.form['user_input']
-    _, response = generate_response(str(user_input)) 
+    _, response = generate_response(str(user_input).strip()) 
     print(response)
     return render_template('response.html', response=response)
 
