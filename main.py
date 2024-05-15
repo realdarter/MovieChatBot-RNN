@@ -279,6 +279,7 @@ def generate_response(sentence):
 
   return cleaned_sentence, result
 
+"""
 while True:
     user_input = input("You: ")
     if user_input.lower() == 'q':
@@ -287,3 +288,4 @@ while True:
     else:
         _, response = generate_response(user_input)
         print("Bot:", response)
+"""
