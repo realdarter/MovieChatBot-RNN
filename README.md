@@ -1,6 +1,9 @@
 # Movie Conversational Chatbot using RNN Language Model 😼
 This project implements a conversational chatbot for movie dialogs using a Recurrent Neural Network (RNN) language model. The chatbot is trained on a dataset of movie dialogs and utilizes TensorFlow 2.x for the model architecture and training.
 
+# Too view the assignment for CS171, I suggest viewing it through the NLP_Chatbot.ipynb
+
+# You can view the GPT Premade model as GPTPretrained_model.ipynb.
 
 # Requirements
 - Python 3.0 or better
