@@ -5,7 +5,8 @@ This project implements a conversational chatbot for movie dialogs using a Recur
 # Requirements
 - Python 3.0 or better
 - Packages: TensorFlow, NumPy, Pandas, Scikit-learn, flask  (You can install using pip install tensorflow, pip install numpy, pip install pandas, pip install scikit, pip install flask)
-
+- Required to download from here: https://www.kaggle.com/datasets/hijest/cleaned-data-for-the-chatbot-collected-from-movies/code unzip and move all the files inside data folder
+  
 # Setup
 - Open Terminal
 - CD to Directory
